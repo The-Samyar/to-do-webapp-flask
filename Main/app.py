@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request, redirect
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 
@@ -16,9 +16,24 @@ class Todo(db.Model):
     def __repr__(self) -> str:
         return f"{id} - {self.body} created at {self.date_created}"
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def index():
-    return render_template('index.html')
+    if request.method == 'POST':
+        task = request.form['task_body']
+        print(task)
+        new_task = Todo(body=task)
+
+        try:
+            db.session.add(new_task)
+            db.session.commit()
+            return redirect('/')
+        except:
+            return "ERROR"
+
+    else:
+        tasks = Todo.query.order_by(Todo.date_created).all()
+        print(tasks)
+        return render_template('index.html', tasks=tasks)
 
 if __name__ == "__name__":
     app.run(debug=True)
