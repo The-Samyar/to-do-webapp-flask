@@ -15,14 +15,16 @@
         </tr>
         {% for task in tasks %}
         <tr>
-            <th>{{ task.body }}</th>
-            <th>{{ task.date_created.date() }}</th>
-            <th>
-                <a href="">Delete</a>
-                <br>
-                <a href="">Edit</a>
-            </th>
-        </tr>
+            <form id="edited_form_{{ task.id }}" action="/edit/{{ task.id }}" method="post">
+            <th><input type="text" name="task_body" id="task_body_{{ task.id }}" value="{{ task.body }}" disabled></th>
+            </form>
+                <th>{{ task.date_created.date() }}</th>
+                <th>
+                    <a href="/delete/{{ task.id }}">Delete</a>
+                    <br>
+                    <button id="edit{{ task.id }}" onclick="edit_action('{{ task.id }}')">Edit</button>
+                </th>
+            </tr>
         {% endfor %}
     </table>
     <form action="/" method="post">

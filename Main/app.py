@@ -49,3 +49,13 @@ def delete(id):
 
 if __name__ == "__name__":
     app.run(debug=True)
+
+@app.route('/edit/<int:id>',methods=['POST'])
+def edit(id):
+    try:
+        task = Todo.query.get_or_404(id)
+        task.body = request.form['task_body']
+        db.session.commit()
+        return redirect('/')
+    except:
+        return 'ERROR'
